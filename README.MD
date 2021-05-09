@@ -4,13 +4,24 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import warnings
-
+from IPython.display import display, Markdown, Latex
 ```
 
 # Fall 2021 Data Science Intern Challenge
 ChengDa Zheng
 
+*Run Online:* https://colab.research.google.com/drive/1TlF3dlUMi8qCWf79Y1upCzYIiCkorRuu?usp=sharing
+
 # Question 1
+
+
+```python
+from google.colab import drive
+drive.mount('/content/drive')
+```
+
+    Mounted at /content/drive
+
 
 On Shopify, we have exactly 100 sneaker shops, and each of these shops sells only one model of shoe. We want to do some analysis of the average order value (AOV). When we look at orders data over a 30 day window, we naively calculate an AOV of $3145.13. Given that we know these shops are selling sneakers, a relatively affordable item, something seems wrong with our analysis. 
 
@@ -33,19 +44,8 @@ df
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
 
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -192,7 +192,7 @@ sns.boxplot(x="variable", y="value",data=pd.melt(df[["total_items","order_amount
 
 
 
-![png](output_7_1.png)
+![png](output_8_1.png)
 
 
 
@@ -208,7 +208,7 @@ sns.boxplot(y="order_amount", data=df,  orient='v')
 
 
 
-![png](output_8_1.png)
+![png](output_9_1.png)
 
 
 Now it is very clear that there are a lot of outliers that will affect the calculation of AOV. But I mentioned that there are different payment methods. Seems like it is impossible to pay such a large amount of money in cash? Let verify the outliers by the payment methods.
@@ -226,7 +226,7 @@ sns.boxplot(y="total_items", x= "payment_method", data=df,  orient='v')
 
 
 
-![png](output_10_1.png)
+![png](output_11_1.png)
 
 
 
@@ -242,7 +242,7 @@ sns.boxplot(y="order_amount", x= "payment_method", data=df,  orient='v')
 
 
 
-![png](output_11_1.png)
+![png](output_12_1.png)
 
 
 Now, from the graphs above. We found that the outliers exist in all three categories. However, some "super" outliers only exist in the credit card category. Also, the large order amount seems related to the large number of total order items.
@@ -251,12 +251,6 @@ Now, from the graphs above. We found that the outliers exist in all three catego
 
 
 Base on the findings above. I draft the solutions as below. The function has two methods. One is the direct method which will remove all the outliers which are out of 3 IQR and calculate the AOV. The second method is a weighted average method, which will calculate the AOV for each of the payment method groups and multiply by their weight out of the total, then sum them up. 
-
-The **first method** give the result as below:
-Adjusted AOV is *$362.87*
-
-The **second method** give the result as below:
-Adjusted AOV is *$397.66*
 
 
 ```python
@@ -310,13 +304,31 @@ def calculate(df: pd.DataFrame, method: int, *describe: bool)->str:
     return method2(df)
   else:
     # raise error if arguement is mistyped. 
-    raise ValueError("method must be either 1 or 2")
-
-# calculate(df, 2)
-# calculate(df,  1)
-# calculate(df, 2, True) 
+    raise ValueError("method must be either 1 or 2") 
 
 ```
+
+
+```python
+display(Markdown('The **first method** gives the result as below:'), calculate(df, 1))
+display(Markdown('<br /> The **second method** gives the result as below:'), calculate(df, 2))
+```
+
+
+The **first method** gives the result as below:
+
+
+
+    'Adjusted AOV is $362.87'
+
+
+
+<br /> The **second method** gives the result as below:
+
+
+
+    'Adjusted AOV is $397.86'
+
 
 
 # Question 2
@@ -378,4 +390,3 @@ DESC LIMIT 1
 ```
 
 **Answer: Boston Crab Meat**
-
