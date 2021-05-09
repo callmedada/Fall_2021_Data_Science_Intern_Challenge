@@ -379,9 +379,3 @@ DESC LIMIT 1
 
 **Answer: Boston Crab Meat**
 
-
-
-
-```python
-
-```
